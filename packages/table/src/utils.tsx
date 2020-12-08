@@ -1,32 +1,34 @@
-import React, { useEffect } from 'react';
-import { Space, Tooltip, Form, Typography } from 'antd';
-
-import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
+import {
+  ProFieldEmptyText,
+  proFieldParsingValueEnumToArray,
+  ProFieldValueType
+} from '@ant-design/pro-field';
+import { IntlType } from '@ant-design/pro-provider';
 import {
   isNil,
   LabelIconTip,
   omitUndefinedAndEmptyArr,
   ProSchemaComponentTypes,
+  ProTableEditableFnType
 } from '@ant-design/pro-utils';
-import {
-  ProFieldEmptyText,
-  proFieldParsingValueEnumToArray,
-  ProFieldValueType,
-} from '@ant-design/pro-field';
+import { Form, Space, Tooltip, Typography } from 'antd';
+import { FormInstance } from 'antd/lib/form';
+import { ColumnsType, TablePaginationConfig } from 'antd/lib/table';
 import get from 'rc-util/lib/utils/get';
-import { IntlType } from '@ant-design/pro-provider';
-
+import React, { useEffect } from 'react';
+import InlineErrorFormItem from './component/InlineErrorFormItem';
+import { UseEditableUtilType } from './component/useEditable';
+import { ColumnsState, useCounter } from './container';
+import defaultRenderText, { spellNamePath } from './defaultRender';
 import {
   ActionType,
   ProColumnGroupType,
   ProColumns,
   RequestData,
-  UseFetchDataAction,
+  UseFetchDataAction
 } from './typing';
-import { ColumnsState, useCounter } from './container';
-import defaultRenderText, { spellNamePath } from './defaultRender';
-import { UseEditableUtilType } from './component/useEditable';
-import InlineErrorFormItem from './component/InlineErrorFormItem';
+
+
 
 /**
  * 检查值是否存在
@@ -254,6 +256,21 @@ const isMergeCell = (
 ) => dom && typeof dom === 'object' && dom?.props?.colSpan;
 
 /**
+ * 判断可不可编辑
+ */
+function isEditableCell<T>(
+  text: any,
+  rowData: T,
+  index: number,
+  editable?: ProTableEditableFnType<T> | boolean,
+) {
+  if (typeof editable === 'boolean') {
+    return editable === false;
+  }
+  return editable?.(text, rowData, index) === false;
+}
+
+/**
  * 这个组件负责单元格的具体渲染
  * @param param0
  */
@@ -272,6 +289,8 @@ export function columnRender<T>({
   const { renderText = (val: any) => val } = columnProps;
 
   const renderTextStr = renderText(text, rowData, index, action.current as ActionType);
+  const mode =
+    isEditable && !isEditableCell(text, rowData, index, columnProps?.editable) ? 'edit' : 'read';
 
   const textDom = defaultRenderText<T>({
     text: renderTextStr,
@@ -282,7 +301,7 @@ export function columnRender<T>({
     columnEmptyText,
     type,
     recordKey,
-    mode: isEditable ? 'edit' : 'read',
+    mode,
   });
 
   const dom: React.ReactNode = isEditable
@@ -292,7 +311,7 @@ export function columnRender<T>({
   /**
    * 如果是编辑模式，并且 renderFormItem 存在直接走 renderFormItem
    */
-  if (isEditable) {
+  if (mode === 'edit') {
     if (columnProps.valueType === 'option') {
       return (
         <Form.Item shouldUpdate noStyle>
@@ -391,7 +410,14 @@ export function genColumnList<T>(props: {
   const { columns, map, counter, columnEmptyText, type, editableUtils } = props;
   return (columns
     .map((columnProps, columnsIndex) => {
-      const { key, dataIndex, valueEnum, valueType, children, filters = [] } = columnProps as ProColumnGroupType<T>;
+      const {
+        key,
+        dataIndex,
+        valueEnum,
+        valueType,
+        children,
+        filters = [],
+      } = columnProps as ProColumnGroupType<T>;
       const columnKey = genColumnKey(key, columnsIndex);
       // 这些都没有，说明是普通的表格不需要 pro 管理
       const noNeedPro = !dataIndex && !valueEnum && !valueType && !children;
@@ -443,3 +469,22 @@ export function genColumnList<T>(props: {
     }
   >;
 }
+
+/**
+ * 因为 fieldProps 支持了 function
+ * 所以新增了这个方法
+ * @param fieldProps
+ * @param form
+ */
+export const getFieldPropsOrFormItemProps = (
+  fieldProps: any,
+  form?: FormInstance<any>,
+  extraProps?: any,
+): Object & {
+  onChange: any;
+} => {
+  if (typeof fieldProps === 'function') {
+    return fieldProps(form, extraProps);
+  }
+  return fieldProps;
+};

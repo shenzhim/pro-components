@@ -4,6 +4,14 @@ import ProField from '@ant-design/pro-field';
 import { ProFormRadio } from '@ant-design/pro-form';
 import ProCard from '@ant-design/pro-card';
 
+const waitTime = (time: number = 100) => {
+  return new Promise((resolve) => {
+    setTimeout(() => {
+      resolve(true);
+    }, time);
+  });
+};
+
 interface DataSourceType {
   id: React.Key;
   title?: string;
@@ -39,11 +47,22 @@ const columns: ProColumns<DataSourceType>[] = [
         },
       ],
     },
+    editable: (text, record, index) => {
+      return index === 1;
+    },
     width: '30%',
   },
   {
     title: '描述',
     dataIndex: 'decs',
+    fieldProps: (from, { rowKey }) => {
+      if (from.getFieldValue([rowKey || '', 'title']) === '不好玩') {
+        return {
+          disabled: true,
+        };
+      }
+      return {};
+    },
   },
   {
     title: '操作',
@@ -66,6 +85,9 @@ export default () => {
   const [editableKeys, setEditableRowKeys] = useState<React.Key[]>([]);
   const [dataSource, setDataSource] = useState<DataSourceType[]>([]);
   const [position, setPosition] = useState<'top' | 'end'>('top');
+  const [newRecord, setNewRecord] = useState({
+    id: (Math.random() * 1000000).toFixed(0),
+  });
   return (
     <>
       <EditableProTable<DataSourceType>
@@ -73,9 +95,7 @@ export default () => {
         headerTitle="可编辑表格"
         recordCreatorProps={{
           position,
-          record: {
-            id: (Math.random() * 1000000).toFixed(0),
-          },
+          record: newRecord,
         }}
         toolBarRender={() => [
           <ProFormRadio.Group
@@ -106,6 +126,12 @@ export default () => {
         onChange={setDataSource}
         editable={{
           editableKeys,
+          onSave: async () => {
+            await waitTime(2000);
+            setNewRecord({
+              id: (Math.random() * 1000000).toFixed(0),
+            });
+          },
           onChange: setEditableRowKeys,
         }}
       />

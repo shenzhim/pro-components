@@ -37,6 +37,8 @@ export type SearchTransformKeyFn = (
   object: any,
 ) => string | { [key: string]: any };
 
+export type ProTableEditableFnType<T> = (_: any, record: T, index: number) => boolean;
+
 // 支持的变形，还未完全支持完毕
 /**
  * 支持的变形，还未完全支持完毕
@@ -151,7 +153,12 @@ export type ProSchema<T = unknown, U = string, Extra = unknown, Action = {}> = {
    */
   renderText?: (text: any, record: T, index: number, action: ProCoreActionType) => any;
 
-  fieldProps?: any;
+  fieldProps?:
+    | ((
+        form: FormInstance<any>,
+        config: ProSchema<T, U, Extra & { isEditable?: boolean; rowKey?: string }, Action>,
+      ) => Object)
+    | Object;
   /**
    * @name 映射值的类型
    */

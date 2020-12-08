@@ -319,12 +319,13 @@ ProTable 在 antd 的 Table 上进行了一层封装，支持了一些预设，�
 | type | 可编辑表格的类型，单行编辑或者多行编辑 | `single` \| `multiple` | - |
 | editableKeys | 正在编辑的行，受控属性。 默认 `key` 会使用 `rowKey` 的配置，如果没有配置会使用 `index`，建议使用 rowKey | `React.Key[]` | - |
 | actionRender | 自定义编辑模式的操作栏 | `(row: T, config: ActionRenderConfig<T>) => React.ReactNode[]` | - |
-| onSave | 保存一行的时候触发，只更新 | `(key: React.Key, row: T) => Promise<void>` | - |
-| onDelete | 删除一行的时候触发 | `(key: React.Key, row: T) => Promise<void>` | - |
+| onSave | 保存一行的时候触发，只更新 | `(key: React.Key, row: T,newLine?:newLineConfig) => Promise<boolean>` | - |
+| onDelete | 删除一行的时候触发 | `(key: React.Key, row: T) => Promise<boolean>` | - |
+| onCancel | 编辑列被修改的时候 | `(key: React.Key, row: T,newLine?:newLineConfig) => Promise<boolean>` | - |
 | onChange | 编辑列被修改的时候 | `(editableKeys: React.Key[], editableRows: T[]) => void` | - |
 | deletePopconfirmMessage | 删除时弹出的确认框提示消息 | `ReactNode` | `删除此行？` |
 | onlyOneLineEditorAlertMessage | 只能编辑一行的的提示 | `ReactNode` | `只能同时编辑一行！` |
-| deletePopconfirmMessage | onlyAddOneLineAlertMessage | `ReactNode` | `只能新增一行！` |
+| onlyAddOneLineAlertMessage | 只能同时新增一行的提示 | `ReactNode` | `只能新增一行！` |
 
 #### ColConfig
 
@@ -399,6 +400,7 @@ ref.current.cancelEditable(rowKey);
 | fieldProps | 查询表单的 props，会透传给表单项 | `{ [prop: string]: any }` | - |
 | search | 配置列的搜索相关，false 为隐藏 | `false` \| `{ transform: (value: any) => any }` | true |
 | search.transform | 转化值的 key, 一般用于事件区间的转化 | `(value: any) => any` | - |
+| editable | 在编辑表格中是否可编辑的，函数的参数和 table 的 render 一样 | `false` \| `(text: any, record: T,index: number) => boolean` | true |
 
 ### valueType 值类型
 

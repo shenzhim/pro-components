@@ -2,6 +2,36 @@
 
 All notable changes to this project will be documented in this file. See [Conventional Commits](https://conventionalcommits.org) for commit guidelines.
 
+## [1.3.4](https://github.com/ant-design/pro-components/compare/@ant-design/pro-field@1.3.3...@ant-design/pro-field@1.3.4) (2020-12-08)
+
+**Note:** Version bump only for package @ant-design/pro-field
+
+## [1.3.3](https://github.com/ant-design/pro-components/compare/@ant-design/pro-field@1.3.2...@ant-design/pro-field@1.3.3) (2020-12-07)
+
+**Note:** Version bump only for package @ant-design/pro-field
+
+## [1.3.2](https://github.com/ant-design/pro-components/compare/@ant-design/pro-field@1.3.1...@ant-design/pro-field@1.3.2) (2020-12-04)
+
+### Bug Fixes
+
+- **field:** fix formatSecond bug ([6e8dd29](https://github.com/ant-design/pro-components/commit/6e8dd2995fbc5b7efdc15e6f91a7b6552a09a7f9))
+
+## [1.3.1](https://github.com/ant-design/pro-components/compare/@ant-design/pro-field@1.3.0...@ant-design/pro-field@1.3.1) (2020-12-03)
+
+### Bug Fixes
+
+- **field:** fix formatSecond bug ([2874143](https://github.com/ant-design/pro-components/commit/2874143e586e957fbb113b6369f5fdce4ff169a3))
+
+# [1.3.0](https://github.com/ant-design/pro-components/compare/@ant-design/pro-field@1.2.2...@ant-design/pro-field@1.3.0) (2020-12-03)
+
+### Features
+
+- **field:** support new valueType `second` ([#1177](https://github.com/ant-design/pro-components/issues/1177)) ([3c45102](https://github.com/ant-design/pro-components/commit/3c45102763bbfa05b481aa0c8462912179a1dfbf))
+
+## [1.2.2](https://github.com/ant-design/pro-components/compare/@ant-design/pro-field@1.2.1...@ant-design/pro-field@1.2.2) (2020-12-02)
+
+**Note:** Version bump only for package @ant-design/pro-field
+
 ## [1.2.1](https://github.com/ant-design/pro-components/compare/@ant-design/pro-field@1.2.0...@ant-design/pro-field@1.2.1) (2020-11-30)
 
 ### Bug Fixes
